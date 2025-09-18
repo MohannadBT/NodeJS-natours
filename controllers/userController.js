@@ -11,11 +11,10 @@ const filterObj = (obj, ...allowedFields) => {
   return newObj;
 };
 
-exports.getAllUsers = factory.getAll(User);
-exports.getUser = factory.getOne(User);
-// Don't update password with this
-exports.updateUser = factory.updateOne(User);
-exports.deleteUser = factory.deleteOne(User);
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id;
+  next();
+};
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   // 1) Create Error if user POST password data
@@ -50,6 +49,11 @@ exports.deleteMe = catchAsync(async (req, res) => {
     data: null,
   });
 });
+
+exports.getAllUsers = factory.getAll(User);
+exports.getUser = factory.getOne(User);
+exports.updateUser = factory.updateOne(User); // Don't update password with this
+exports.deleteUser = factory.deleteOne(User);
 
 exports.createUser = (req, res) => {
   res.status(500).json({
